@@ -1,12 +1,16 @@
 import { NavigationLinks } from "@/constants";
 import HaitekuLogo from "../public/images/Haiteku_Tribe_Logo_Yellow.svg";
-
 import Image from "next/image";
 import Link from "next/link";
-
 import React from "react";
+import { getCurrentUser } from "@/lib/session";
+import Button from "./Button";
+import AuthProviders from "./AuthProviders";
+import ProfileMenu from "./ProfileMenu";
 
-const NavigationBar = () => {
+const NavigationBar = async () => {
+
+    const session = await getCurrentUser()
   return (
     <nav className="flex justify-between items-center py-5 px-8 border-b border-white gap-4">
       <div className="flex-1 flex items-center justify-start gap-10">
@@ -32,6 +36,20 @@ const NavigationBar = () => {
             </Link>
           ))}
         </ul>
+      </div>
+
+      <div className='flex justify-center items-center gap-4'>
+        {session?.user ? (
+          <>
+            <ProfileMenu session={session} />
+
+            <Link href="/create-project">
+              <Button title='Share work' />
+            </Link>
+          </>
+        ) : (
+          <AuthProviders />
+        )}
       </div>
     </nav>
   );
